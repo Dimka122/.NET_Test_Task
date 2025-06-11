@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PersonApi.Data;
+using PersonApi.Repositories;
+using PersonApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,9 @@ builder.Services.AddDbContext<PersonDbContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(Mapping.MappingProfile));
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+builder.Services.AddScoped<IPersonService, PersonService>();
 
 var app = builder.Build();
 
