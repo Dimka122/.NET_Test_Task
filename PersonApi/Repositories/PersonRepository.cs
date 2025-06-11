@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PersonApi.Data;
 using PersonApi.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PersonApi.Repositories
 {
@@ -13,11 +16,9 @@ namespace PersonApi.Repositories
             _context = context;
         }
 
-        public async Task<Person> AddPerson(Person person)
+        public async Task<IEnumerable<Person>> GetAllPersons()
         {
-            _context.Persons.Add(person);
-            await _context.SaveChangesAsync();
-            return person;
+            return await _context.Persons.Include(p => p.Address).ToListAsync();
         }
 
         public async Task<IEnumerable<Person>> GetFilteredPersons(string firstName, string lastName, string city)
@@ -34,6 +35,35 @@ namespace PersonApi.Repositories
                 query = query.Where(p => p.Address != null && p.Address.City.Contains(city));
 
             return await query.ToListAsync();
+        }
+
+        public async Task<Person> GetPersonById(long id)
+        {
+            return await _context.Persons
+                .Include(p => p.Address)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+        public async Task<Person> AddPerson(Person person)
+        {
+            _context.Persons.Add(person);
+            await _context.SaveChangesAsync();
+            return person;
+        }
+
+        public async Task<bool> UpdatePerson(Person person)
+        {
+            _context.Persons.Update(person);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> DeletePerson(long id)
+        {
+            var person = await _context.Persons.FindAsync(id);
+            if (person == null) return false;
+
+            _context.Persons.Remove(person);
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }
