@@ -21,18 +21,26 @@ namespace PersonApi.Repositories
             return await _context.Persons.Include(p => p.Address).ToListAsync();
         }
 
-        public async Task<IEnumerable<Person>> GetFilteredPersons(string firstName, string lastName, string city)
+        public async Task<IEnumerable<Person>> GetFilteredPersons(string? firstName, string? lastName, string? city)
         {
-            var query = _context.Persons.Include(p => p.Address).AsQueryable();
+            var query = _context.Persons
+                .Include(p => p.Address)
+                .AsQueryable();
 
             if (!string.IsNullOrEmpty(firstName))
+            {
                 query = query.Where(p => p.FirstName.Contains(firstName));
+            }
 
             if (!string.IsNullOrEmpty(lastName))
+            {
                 query = query.Where(p => p.LastName.Contains(lastName));
+            }
 
             if (!string.IsNullOrEmpty(city))
+            {
                 query = query.Where(p => p.Address != null && p.Address.City.Contains(city));
+            }
 
             return await query.ToListAsync();
         }
