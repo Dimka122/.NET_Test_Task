@@ -1,24 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import { getContacts, addContact, deleteContact } from './services/api';
+import ContactList from './components/ContactList';
+import ContactForm from './components/ContactForm';
+import ContactFilter from './components/ContactFilter';
+import { Container, Typography, Box } from '@mui/material';
 
 function App() {
+  const [contacts, setContacts] = useState([]);
+  const [filters, setFilters] = useState({});
+
+  useEffect(() => {
+    loadContacts();
+  }, [filters]);
+
+  const loadContacts = async () => {
+    try {
+      const data = await getContacts(filters);
+      setContacts(data);
+    } catch (error) {
+      console.error('Error loading contacts:', error);
+    }
+  };
+
+  const handleAddContact = async (contact) => {
+    await addContact(contact);
+    loadContacts();
+  };
+
+  const handleDelete = async (id) => {
+    await deleteContact(id);
+    loadContacts();
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container maxWidth="md">
+      <Box my={4}>
+        <Typography variant="h4" gutterBottom>
+          Contact Manager
+        </Typography>
+        <ContactFilter onFilter={setFilters} />
+        <ContactForm onSubmit={handleAddContact} />
+        <ContactList contacts={contacts} onDelete={handleDelete} />
+      </Box>
+    </Container>
   );
 }
 
