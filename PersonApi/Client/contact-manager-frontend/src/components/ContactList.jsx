@@ -10,18 +10,22 @@ export default function ContactList({ contacts, onDelete }) {
           <TableRow>
             <TableCell>First Name</TableCell>
             <TableCell>Last Name</TableCell>
-            <TableCell>Phone</TableCell>
+             <TableCell>City</TableCell>
+            <TableCell>AddressLine</TableCell>
             <TableCell>Email</TableCell>
+            
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {contacts.map((contact) => (
             <TableRow key={contact.id}>
-              <TableCell>{contact.firstName}</TableCell>
-              <TableCell>{contact.lastName}</TableCell>
-              <TableCell>{contact.phone}</TableCell>
-              <TableCell>{contact.email}</TableCell>
+              <TableCell>{contact.firstName || '-'}</TableCell>
+              <TableCell>{contact.lastName || '-'}</TableCell>
+              <TableCell>{contact.address?.city || '-'}</TableCell>
+              <TableCell>{contact.address?.addressLine || '-'}</TableCell>
+              <TableCell>{contact.email || '-'}</TableCell>
+              
               <TableCell>
                 <IconButton onClick={() => onDelete(contact.id)}>
                   <DeleteIcon color="error" />

@@ -8,6 +8,7 @@ using PersonApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -37,7 +38,6 @@ app.UseCors(policy => policy
     .AllowAnyMethod()
     .AllowAnyHeader()
     .AllowCredentials());
-
 
 using (var scope = app.Services.CreateScope())
 {
