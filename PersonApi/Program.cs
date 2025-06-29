@@ -6,6 +6,7 @@ using PersonApi.Repositories;
 using PersonApi.Services;
 using PersonApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,13 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 });
 
 var app = builder.Build();
+
+app.UseCors(policy => policy
+    .WithOrigins("http://localhost:3000") // URL вашего React-приложения
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials());
+
 
 using (var scope = app.Services.CreateScope())
 {
