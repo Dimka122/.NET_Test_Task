@@ -8,6 +8,6 @@ namespace PersonApi.Models
         public string City { get; set; }
         public string AddressLine { get; set; }
 
-        public virtual ICollection<Person> Persons { get; set; }
+        public ICollection<Person> Persons { get; set; }
     }
 }

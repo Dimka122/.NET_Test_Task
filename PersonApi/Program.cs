@@ -8,7 +8,6 @@ using PersonApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cors;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -18,14 +17,17 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<PersonDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+// Register repositories and services
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddScoped<IAddressService, AddressService>();
+
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
@@ -34,28 +36,16 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 var app = builder.Build();
 
 app.UseCors(policy => policy
-    .WithOrigins("http://localhost:3000") // URL вашего React-приложения
+    .WithOrigins("http://localhost:3000")
     .AllowAnyMethod()
     .AllowAnyHeader()
     .AllowCredentials());
 
+// Apply migrations automatically
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<PersonDbContext>();
-    dbContext.Database.EnsureCreated();
-
-    if (!dbContext.Addresses.Any())
-    {
-        dbContext.Addresses.AddRange(
-            new Address { City = "New York", AddressLine = "123 Main St" },
-            new Address { City = "London", AddressLine = "456 Oxford St" },
-            new Address { City = "Madrid", AddressLine = "123 Main St" },
-            new Address { City = "Nizza", AddressLine = "456 Oxford St" },
-            new Address { City = "New Orlean", AddressLine = "123 Main St" }
-            
-        );
-        dbContext.SaveChanges();
-    }
+    dbContext.Database.Migrate();
 }
 
 // Configure the HTTP request pipeline.

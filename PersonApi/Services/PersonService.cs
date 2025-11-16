@@ -9,13 +9,17 @@ namespace PersonApi.Services
     public class PersonService : IPersonService
     {
         private readonly IPersonRepository _personRepository;
+        private readonly IAddressRepository _addressRepository;
         private readonly IMapper _mapper;
 
-        public PersonService(IPersonRepository personRepository, IMapper mapper)
+        public PersonService(IPersonRepository personRepository, IAddressRepository _addressRepository, IMapper mapper)
         {
             _personRepository = personRepository;
+            _addressRepository = _addressRepository;
             _mapper = mapper;
         }
+
+
 
         public async Task<IEnumerable<PersonDTO>> GetAllPersons()
         {

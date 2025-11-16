@@ -9,9 +9,14 @@ namespace PersonApi.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<CreatePersonDTO, Person>();
+            // Person mappings
             CreateMap<Person, PersonDTO>();
-            CreateMap<Address, AddressDTO>();
+            CreateMap<CreatePersonDTO, Person>();
+
+            // Address mappings
+            CreateMap<Address, DTOs.AddressDTO>();
+            CreateMap<CreateAddressDTO, Address>();
+            CreateMap<CreateAddressDTO, Address>().ReverseMap();
         }
     }
 }

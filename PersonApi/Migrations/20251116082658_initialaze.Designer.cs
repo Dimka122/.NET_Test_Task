@@ -12,8 +12,8 @@ using PersonApi.Data;
 namespace PersonApi.Migrations
 {
     [DbContext(typeof(PersonDbContext))]
-    [Migration("20250611072944_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20251116082658_initialaze")]
+    partial class initialaze
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
